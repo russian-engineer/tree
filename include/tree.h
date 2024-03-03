@@ -16,9 +16,12 @@ struct TreeNode {
 };
 
 int AddElemTree(TreeNode *root, int new_elem);
+int RemoveElemTree(TreeNode *root, int rem_elem);
 int CleanTree(TreeNode *root);
 
 int PrintTree(TreeNode *root);
 int CreateGraph(TreeNode *node, FILE *fp);
+
+void CleanBuffer();
 
 #endif

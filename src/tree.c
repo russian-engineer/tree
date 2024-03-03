@@ -1,10 +1,36 @@
 #include "../include/tree.h"
-#include <linux/limits.h>
 #include <stdio.h>
-#include <stdlib.h>
+
+printf(
+printf()
+printf()
+printf(;
+
+#endif /* ifdef MACRO */
+#ifndef MACRO
+
+#endif /* ifndef MACRO */
+#ifndef ;wq
+
+#endif /* ifndef ;wq */
+#endif /* ifndef MACRO */
+
+#ifndef MACRO
+
+#endif /* ifndef MACRO */
+
+#ifndef MACRO
+
+#endif /* ifndef MACRO */
+
+#ifndef ;w
+
+#endif /* ifndef ;w */
 
 int AddElemTree(TreeNode *root, int new_elem)
 {
+    printf();
+
     assert(root != NULL);
 
     if (!root->data)
@@ -29,21 +55,117 @@ int AddElemTree(TreeNode *root, int new_elem)
             AddElemTree(root->LeftNode, new_elem);
         }
         else 
-        {
-            fprintf(stderr, "Ошибка: Такой элемент уже существует в дереве\n");
             return 1;
-        }
     }
     
     return 0;
 }
 
+int RemoveElemTree(TreeNode *root, int rem_elem)
+{
+    if (*root->data == rem_elem)
+    {
+        if (!root->LeftNode && !root->RightNode)
+        {
+            free(root->data);
+            return 1;
+        }
+        else if (!root->LeftNode && root->RightNode)
+        {
+            free(root->data);
+            TreeNode *tmp = root->RightNode;
+            memcpy(root, root->RightNode, sizeof(TreeNode));
+            free(tmp);
+            return 2;
+        }
+        else if (root->LeftNode && !root->RightNode)
+        {
+            free(root->data);
+            TreeNode *tmp = root->LeftNode;
+            memcpy(root, root->LeftNode, sizeof(TreeNode));
+            free(tmp);
+            return 2;
+        }
+        else 
+        {
+            TreeNode *before_min = root;
+            TreeNode *min_elem_r = root->RightNode;
+            while (min_elem_r->LeftNode)
+            {
+                before_min = min_elem_r;
+                min_elem_r = min_elem_r->LeftNode;
+            }
+            
+            free(root->data);
+            root->data = min_elem_r->data;
+            if (!min_elem_r->LeftNode && !min_elem_r->RightNode)
+            {
+                free(min_elem_r);
+                before_min->LeftNode = NULL;
+            }
+            else if (!min_elem_r->LeftNode && min_elem_r->RightNode)
+            {
+                before_min->LeftNode = min_elem_r->RightNode;
+                free(min_elem_r);
+            }
+
+            return 2;
+        }
+    }
+    else 
+    {
+        if(root->LeftNode)
+        {
+            switch (RemoveElemTree(root->LeftNode, rem_elem))
+            {
+                case 1:
+                    free(root->LeftNode);
+                case 2:
+                    return 2;
+                    break;            
+                
+                case 0:
+                    break;
+                
+                default:
+                    return -7;
+                    break;
+            }
+        }
+
+        if(root->RightNode)
+        {
+            switch (RemoveElemTree(root->RightNode, rem_elem))
+            {
+                case 1:
+                    free(root->RightNode);
+                case 2:
+                    return 2;
+                    break;            
+                
+                case 0:
+                    break;
+                
+                default:
+                    return -7;
+                    break;
+            }
+        }
+
+        return 0;
+    }
+    return 0;
+}
+
 int PrintTree(TreeNode *root)
 {
+    printf("D:[%p] LN:[%p] RN:[%p] -- ", root->data, root->LeftNode, root->RightNode);
+    if (root->data)
+        printf("<<%d>>\n", *root->data);
+    
     if (root->LeftNode)
         PrintTree(root->LeftNode);
 
-    printf("[%d]", *root->data);
     
     if (root->RightNode)
         PrintTree(root->RightNode);
