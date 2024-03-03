@@ -8,21 +8,17 @@
 #include <string.h>
 
 typedef struct TreeNode TreeNode;
-typedef int elem_t;
 
 struct TreeNode {
-    char     life;
-    elem_t   *data;
+    int *data;
     TreeNode *LeftNode;
     TreeNode *RightNode;
 };
 
-int AddElemTree(TreeNode *node, elem_t *elem_ptr, size_t sz_elem);
+int AddElemTree(TreeNode *root, int new_elem);
+int CleanTree(TreeNode *root);
+
+int PrintTree(TreeNode *root);
 int CreateGraph(TreeNode *node, FILE *fp);
-int PrintTree(TreeNode *node);
-int CleanTree(TreeNode *node);
-
-int CompareElem(elem_t *elem1, elem_t *elem2);
-
 
 #endif

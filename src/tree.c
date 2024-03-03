@@ -1,57 +1,70 @@
 #include "../include/tree.h"
-#include <assert.h>
-#include <cstdlib>
+#include <stdio.h>
 #include <stdlib.h>
 
-int CompareElem(elem_t *elem1, elem_t *elem2)
+int AddElemTree(TreeNode *root, int new_elem)
 {
-    return *elem1 - *elem2;
-}
+    assert(root != NULL);
 
-
-int AddElemTree(TreeNode *node, elem_t *elem_ptr, size_t sz_elem)
-{
-    assert(node != NULL);
-    assert(elem_ptr != NULL);
-
-    if (node->life == 0)
+    if (!root->data)
     {
-        node->life = 1;
-        node->data = (elem_t *)malloc(sz_elem);
-        memcpy(node->data, elem_ptr, sz_elem);
-        node->RightNode = NULL;
-        node->LeftNode = NULL;
+        root->data = (int *)malloc(sizeof(int));
+        memcpy(root->data, &new_elem, sizeof(int));
     }
-    else if (node->life == 1)
+    else
     {
-        if (CompareElem(elem_ptr, node->data) > 0)
+        if (new_elem > *root->data)
         {
-            if (node->RightNode != NULL)
-                AddElemTree(node->RightNode, elem_ptr, sz_elem);
-            else
-            {
-                node->RightNode = (TreeNode *)malloc(sizeof(TreeNode));
-                node->RightNode->life = 0;
-                AddElemTree(node->RightNode, elem_ptr, sz_elem);
-            }
+            if (!root->RightNode)
+                root->RightNode = (TreeNode *)calloc(1, sizeof(TreeNode));
+                
+            AddElemTree(root->RightNode, new_elem);
         }
-        else if (CompareElem(elem_ptr, node->data) < 0)
+        else if (new_elem < *root->data)
         {
-            if (node->LeftNode != NULL)
-                AddElemTree(node->LeftNode, elem_ptr, sz_elem);
-            else
-            {
-                node->LeftNode = (TreeNode *)malloc(sizeof(TreeNode));
-                node->LeftNode->life = 0;
-                AddElemTree(node->LeftNode, elem_ptr, sz_elem);
-            }
+            if (!root->LeftNode)
+                root->LeftNode = (TreeNode *)calloc(1, sizeof(TreeNode));
+
+            AddElemTree(root->LeftNode, new_elem);
         }
         else 
+        {
+            fprintf(stderr, "Ошибка: Такой элемент уже существует в дереве\n");
             return 1;
+        }
     }
-    else 
-        return 1;
     
     return 0;
 }
 
+int PrintTree(TreeNode *root)
+{
+    if (root->LeftNode)
+        PrintTree(root->LeftNode);
+
+    printf("[%d]", *root->data);
+    
+    if (root->RightNode)
+        PrintTree(root->RightNode);
+
+    return 0;
+}
+
+int CleanTree(TreeNode *root)
+{
+    if (root->LeftNode)
+    {
+        CleanTree(root->LeftNode);
+        free(root->LeftNode);
+    }
+
+    if (root->RightNode)
+    {
+        CleanTree(root->RightNode);
+        free(root->RightNode);
+    }
+
+    free(root->data);
+
+    return 0;
+}

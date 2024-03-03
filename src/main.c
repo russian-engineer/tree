@@ -1,19 +1,20 @@
 #include "../include/tree.h"
+#include <stdio.h>
 
 int main()
 {
-    FILE *fp_graph = fopen("../graphiz/bin_graph.svg", "w");
+    // FILE *fp_graph = fopen("../graphiz/bin_graph.svg", "w");
 
-    TreeNode RootTree = {0, NULL, NULL, NULL};
-
-    elem_t num = 0;
-
-    while (fscanf(stdin, "%d", &num) == 1)
-        AddElemTree(&RootTree, &num, sizeof(elem_t));
+    TreeNode RootTree = {NULL, NULL, NULL};
     
-    CreateGraph(&RootTree, fp_graph);
-    fclose(fp_graph);
+    int num = 0;
 
+    while (printf("Введите число или 'q' для завершения: ") && fscanf(stdin, "%d", &num))
+        AddElemTree(&RootTree, num);
+    
+    // CreateGraph(&RootTree, fp_graph);
+    // fclose(fp_graph);
+            
     PrintTree(&RootTree);
     CleanTree(&RootTree);
 }
