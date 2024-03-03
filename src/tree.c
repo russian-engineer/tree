@@ -1,4 +1,5 @@
 #include "../include/tree.h"
+#include <linux/limits.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -65,6 +66,22 @@ int CleanTree(TreeNode *root)
     }
 
     free(root->data);
+
+    return 0;
+}
+
+int CreateGraph(TreeNode *root, FILE *fp)
+{
+    if (root->LeftNode)
+    {
+        fprintf(fp, "\t%d -> %d\n", *root->data, *root->LeftNode->data);
+        CreateGraph(root->LeftNode, fp);
+    } 
+    if (root->RightNode)
+    {
+        fprintf(fp, "\t%d -> %d\n", *root->data, *root->RightNode->data);
+        CreateGraph(root->RightNode, fp);
+    }
 
     return 0;
 }
